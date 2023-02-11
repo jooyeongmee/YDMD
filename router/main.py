@@ -1,6 +1,6 @@
-from flask import request, render_template, Flask, jsonify
+from flask import Blueprint, request, render_template, jsonify
 
-app = Flask(__name__)
+
 
 from pymongo import MongoClient
 
@@ -10,18 +10,20 @@ dog_db = client.YDMD.dogs
 import requests
 from bs4 import BeautifulSoup
 
+main = Blueprint('main', __name__, url_prefix="/main")
+
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
 
 # 메인페이지에 보여줄 강아지 목록
 our_dogs = {'말티즈', '푸들', '골든 리트리버'}
 
-@app.route('/', methods=["GET"])
+@main.route('/', methods=["GET"])
 def home():
     return render_template("index.html")
 
 
-@app.route("/api/dog-list", methods=["GET"])
+@main.route("/api/dog-list", methods=["GET"])
 def get_dog_list():
     dog_list = list()
     for category in categories:
@@ -61,5 +63,4 @@ def get_dog_list():
     return jsonify({'dog_list': dog_list})
 
 
-if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+

@@ -1,6 +1,6 @@
-from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+from flask import Blueprint, render_template, jsonify, request, session, redirect, url_for
 
-app = Flask(__name__)
+
 
 from pymongo import MongoClient
 import certifi
@@ -9,6 +9,8 @@ ca = certifi.where()
 
 client = MongoClient("mongodb+srv://project:ydmd5@cluster0.n7giicj.mongodb.net/?retryWrites=true&w=majority", tlsCAFile=ca)
 db = client.YDMD.users
+
+sign_in = Blueprint('signin', __name__, url_prefix="/signin")
 
 # JWT 토큰을 만들 때 필요한 비밀문자열입니다. 아무거나 입력해도 괜찮습니다.
 # 이 문자열은 서버만 알고있기 때문에, 내 서버에서만 토큰을 인코딩(=만들기)/디코딩(=풀기) 할 수 있습니다.
@@ -28,7 +30,7 @@ import hashlib
 #################################
 ##  HTML을 주는 부분             ##
 #################################
-@app.route('/')
+@sign_in.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
     try:
@@ -40,7 +42,7 @@ def home():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("signin", msg="로그인 정보가 존재하지 않습니다."))
 
-@app.route('/signin')
+@sign_in.route('/signin')
 def signin():
     msg = request.args.get("msg")
     return render_template('signin/signin.html', msg=msg)
@@ -53,7 +55,7 @@ def signin():
 
 # [로그인 API]
 # id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
-@app.route('/api/signin', methods=['POST'])
+@sign_in.route('/api/signin', methods=['POST'])
 def api_signin():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -82,7 +84,7 @@ def api_signin():
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
-@app.route('/api/signup', methods=['POST'])
+@sign_in.route('/api/signup', methods=['POST'])
 def api_signup():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
@@ -119,5 +121,4 @@ def api_signup():
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
 
-if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+
