@@ -6,7 +6,6 @@ from pymongo import MongoClient
 import certifi
 
 ca = certifi.where()
-
 client = MongoClient('mongodb+srv://project:ydmd5@cluster0.n7giicj.mongodb.net/?retryWrites=true&w=majority',  tlsCAFile=ca)
 db = client.YDMD.user
 

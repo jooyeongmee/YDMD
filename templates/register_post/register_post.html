@@ -16,22 +16,51 @@
     <title>너강내강</title>
 
     <style>
+        .row{margin-top: 100px}
+        #write_box{
+            display: flex;
+            flex-direction: row;
+            padding: 10px;
+        }
+        #write_box {
+
+        }
+        #write_box > #write_box_inner{
+            width: 80%;
+            margin-right: 10px;
+        }
+        #write_box > #clear_btn{
+            margin-right: 10px;
+        }
     </style>
     <script>
-
+        function save_reivw(){
+            let review_list =$('#write_box_inner').val()
+            $.ajax({
+                type: "POST",
+                url: "/bucketver2",
+                data: {bucket_give:bucket}
+                ,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
+                }
+            });
+        }
     </script>
 </head>
 <body>
 <div class="container">
-  <div class="row">
-    <div class="col-2"></div>
-    <div class="col-8 card">
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8 card"  id="write_box">
+            <input id="write_box_inner"  class="form-control updateBucket" type="text" placeholder="작성하기!">
+            <button type="button" id="clear_btn" class="btn btn-outline-primary">완료</button>
+            <button type="button" id="edite_btn" class="btn btn-outline-primary">수정</button>
 
-        <div class="dog_img">
         </div>
-    </div>
-    <div class="col-2"></div>
+        <div class="col-2"></div>
 
-  </div>
+    </div>
 </body>
 </html>
