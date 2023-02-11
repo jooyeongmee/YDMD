@@ -12,20 +12,23 @@
 
     <script>
         function signin() {
+            alert('여기있어요')
+
             $.ajax({
                 type: "POST",
-                url: "/api/signin",
-                data: {id_give: $('#userid').val(), pw_give: $('#userpw').val()},
+                url: "/signin/api/signin",
+                data: {
+                    id_give: $('#userid').val(),
+                    pw_give: $('#userpw').val()
+                },
                 success: function (response) {
                     if (response['result'] == 'success') {
-                        // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
-                        // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
                         $.cookie('mytoken', response['token']);
 
                         alert('로그인 완료!')
                         window.location.href = '/'
                     } else {
-                        // 로그인이 안되면 에러메시지를 띄웁니다.
+
                         alert(response['msg'])
                     }
                 }
@@ -33,18 +36,21 @@
         }
 
         function signup() {
+
             $.ajax({
                 type: "POST",
-                url: "/api/signup",
+                url: "/signin/api/signup",
                 data: {
                     id_give: $('#userid').val(),
-                    pw_give: $('#userpw').val(),
+                    pw_give: $('#userpw').val()
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
+
                         alert('회원가입이 완료되었습니다.')
-                        window.location.href = '/login'
+                        window.location.href = '/signin'
                     } else {
+
                         alert(response['msg'])
                     }
                 }
@@ -87,8 +93,10 @@
                 <button class="button is-primary" onclick="signin()">sign in</button>
                 <button class="button is-primary" onclick="signup()">sign up</button>
 
+
             </div>
         </div>
 
 </body>
 </html>
+

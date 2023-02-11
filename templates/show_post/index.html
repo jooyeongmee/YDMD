@@ -18,6 +18,7 @@
       integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <title>너강내강</title>
 
@@ -33,7 +34,7 @@
         margin-top: 50px;
       }
 
-      .post-list {
+      .post-list{
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -43,9 +44,27 @@
       }
 
       .post-list > ol > li {
+
+        width: 500px;
         margin-bottom: 20px;
         border-radius: 5px;
         box-shadow: 0px 0px 3px 0px gray;
+
+      }
+      .content {
+        margin-top: 10px;
+      }
+      .btns {
+        margin-top: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: end;
+      }
+
+      .btns > button {
+        margin-right: 5px;
       }
 
       .userid {
@@ -72,36 +91,77 @@
         padding-top: 5%;
       }
     </style>
-    <script>
-      $(document).ready(function () {
-            show_post();
-        });
-      function show_post(){
-
-        $.ajax({
-          type: "GET",
-          url: `/show_post?user_id=3&dog_name=강아지이름`,
-          data: {},
-          success: function (response) {
-            alert(response["msg"])
-            let dog = response['dog']
-
-            let image_html = `<img src=${dog['dog_image']} class="img-fluid rounded-start" alt="...">`
-            let name_html = `${dog['dog_name']}`
-            let intro_html = `${dog['dog_intro']}`
-
-            $('#dog_img').append(image_html)
-            $('#dog_name').append(name_html)
-            $('#dog_intro').append(intro_html)
-          }
-        });
-      }
-    </script>
   </head>
+  <script>
+    $(document).ready(function () {
+      login();
+      show_post();
+    });
+
+    function login() {
+      $.ajax({
+        type: "GET",
+        url: `/show/login`,
+        data: {},
+        success: function (response) {
+          // alert('안녕')
+          // alert(response["token"])
+          $.cookie('mytoken', response['token']);
+
+        }
+      });
+    }
+
+
+    function show_post(){
+      window.sessionStorage.setItem('dog_name', '푸들');
+      let user_id = `{{user_id}}`
+      let dog_name = sessionStorage.getItem('dog_name');
+      $.ajax({
+        type: "GET",
+        url: `/show/show_post?user_id=${user_id}&dog_name=${dog_name}`,
+        data: {},
+        success: function (response) {
+          let dog = response['dog']
+          let comments = response['comments']
+          let users = response['users']
+
+          let image_html = `<img src=${dog['dog_image']} class="img-fluid rounded-start" alt="...">`
+          let name_html = `${dog['dog_name']}`
+          let intro_html = `${dog['dog_intro']}`
+
+          $('#dog_img').append(image_html)
+          $('#dog_name').append(name_html)
+          $('#dog_intro').append(intro_html)
+
+          for (let i = 0; i < users.length; i++) {
+
+            let comment = comments[i]['comment']
+
+            let temp_html = `<li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                  <div class="ms-2 me-auto">
+                                    <div class="fw-bold">${user_id}</div>
+                                    <div class="content">${comment}</div>
+                                  </div>
+
+                                  <div class="btns">
+                                    <button type="button" onclick="" class="btn btn-outline-primary">수정하기</button>
+                                    <button type="button" class="btn btn-outline-danger">삭제하기</button>
+                                  </div>
+                                </div>
+                              </li>`
+
+            $('#post-list').append(temp_html)
+          }
+        }
+      });
+    }
+  </script>
 
   <body>
     <header class="header">
-      <a href="http://localhost:5001">
+      <a href="http://localhost:5001/">
         <h1>너강내강</h1>
       </a>
       <div class="menu_div">
@@ -109,7 +169,7 @@
           <span
             class="user_id"
             id="user_id"
-          >
+          > {{user_id}}
           </span>
           님
         </div>
@@ -133,36 +193,11 @@
       </div>
     </div>
       <div class="post-list">
-      <ol class="list-group list-group-numbered">
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold">Userid</div>
-            Content for list item
-          </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold">Userid</div>
-            Content for list item
-          </div>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-start">
-          <div class="ms-2 me-auto">
-            <div class="fw-bold">Userid</div>
-            Content for list item
-          </div>
-        </li>
-      </ol>
-    </div>
+        <ol class="list-group list-group-numbered" id="post-list">
+
+        </ol>
+      </div>
     </main>
-
-
-
-
-
-
-
-
 
   </body>
 </html>
