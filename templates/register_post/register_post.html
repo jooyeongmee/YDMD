@@ -150,12 +150,14 @@
 
 
         function save_comment() {
+            let user_name = `{{id}}`
+            console.log(user_name)
             let dog_name = sessionStorage.getItem('dog_name');
             let comment_list = $('#write_box_inner').val()
             $.ajax({
                 type: "POST",
                 url: "/register/register_post",
-                data: {comment_give: comment_list, dog_name_give: dog_name},
+                data: {user_name_give: user_name, comment_give: comment_list, dog_name_give: dog_name},
                 success: function (response) {
                     alert(response["msg"])
                 }

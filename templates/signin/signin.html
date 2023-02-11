@@ -44,8 +44,6 @@
 
     <script>
         function signin() {
-            alert('여기있어요')
-
             $.ajax({
                 type: "POST",
                 url: "/signin/api/signin",
@@ -82,8 +80,7 @@
                         alert('회원가입이 완료되었습니다.')
                         window.location.href = 'http://localhost:5000/'
                     } else {
-
-                        alert(response['msg'])
+                        alert(response['result'])
                     }
                 }
             })

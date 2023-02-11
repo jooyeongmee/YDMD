@@ -68,6 +68,11 @@ def api_signup():
     pw_receive = request.form['pw_give']
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
+    user_ids = list(db.user.find({'id': id_receive}, {'_id': False}))
+    if (len(user_ids)) > 0:
+        msg = '이미 가입된 아이디입니다. 다른 아이디로 등록해주세요!'
+    else:
+        msg = 'success'
 
     doc = {
         'id': id_receive,
@@ -76,7 +81,7 @@ def api_signup():
     }
     db.user.insert_one(doc)
 
-    return jsonify({'result': 'success'})
+    return jsonify({'result': msg})
 
 
 @sign_in.route('/api/id', methods=['GET'])
