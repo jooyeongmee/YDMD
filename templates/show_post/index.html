@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>너강내강</title>
+
+    <style>
+      .title {
+        text-align: center;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        margin-top: 50px;
+      }
+
+      .post-list {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        margin-top: 20px;
+      }
+
+      .post-list > ol > li {
+        margin-bottom: 20px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 3px 0px gray;
+      }
+
+      .userid {
+        width: 90%;
+        text-align: end;
+        font-size: 20px;
+
+        margin-top: 30px;
+
+      }
+
+      header {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 30px 30px;
+      }
+
+      main {
+        padding-top: 5%;
+      }
+    </style>
+    <script>
+      $(document).ready(function () {
+            show_post();
+        });
+      function show_post(){
+
+        $.ajax({
+          type: "GET",
+          url: `/show_post?user_id=3&dog_name=강아지이름`,
+          data: {},
+          success: function (response) {
+            alert(response["msg"])
+            let dog = response['dog']
+
+            let image_html = `<img src=${dog['dog_image']} class="img-fluid rounded-start" alt="...">`
+            let name_html = `${dog['dog_name']}`
+            let intro_html = `${dog['dog_intro']}`
+
+            $('#dog_img').append(image_html)
+            $('#dog_name').append(name_html)
+            $('#dog_intro').append(intro_html)
+          }
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <header class="header">
+      <a href="http://localhost:5001">
+        <h1>너강내강</h1>
+      </a>
+      <div class="menu_div">
+        <div>
+          <span
+            class="user_id"
+            id="user_id"
+          >
+          </span>
+          님
+        </div>
+
+      </div>
+    </header>
+    <main>
+      <div class="title">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4" id="dog_img">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title" id="dog_name"></h5>
+              <p class="card-text" id="dog_intro"></p>
+              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="post-list">
+      <ol class="list-group list-group-numbered">
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Userid</div>
+            Content for list item
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Userid</div>
+            Content for list item
+          </div>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">Userid</div>
+            Content for list item
+          </div>
+        </li>
+      </ol>
+    </div>
+    </main>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
