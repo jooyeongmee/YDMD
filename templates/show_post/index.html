@@ -128,26 +128,10 @@
   </head>
   <script>
     $(document).ready(function () {
-      // login();
       show_post();
     });
 
-    // function login() {
-    //   $.ajax({
-    //     type: "GET",
-    //     url: `/show/login`,
-    //     data: {},
-    //     success: function (response) {
-    //       // alert('안녕')
-    //       // alert(response["token"])
-    //       $.cookie('mytoken', response['token']);
-    //
-    //     }
-    //   });
-    // }
     function update_post(id, dog_name) {
-      alert(id)
-      alert(dog_name)
       $('.modal').fadeIn();
       $('.modal_complete_button').click(() => {
         let new_comment = $('.modal_comment_input').val();
@@ -166,9 +150,22 @@
 
     }
 
+    function delete_post(id, dog_name, comment) {
+        $.ajax({
+          type: "DELETE",
+          url: `/show/delete`,
+          data: {id: id, dog_name: dog_name, comment: comment},
+          success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
+
+          }
+        });
+
+    }
+
     function show_post(){
-      window.sessionStorage.setItem('dog_name', '푸들');
-      let user_id = `{{user_id}}`
+      let user_id = `{{id}}`
       let dog_name = sessionStorage.getItem('dog_name');
       $.ajax({
         type: "GET",
@@ -191,7 +188,6 @@
           for (let i = 0; i < users.length; i++) {
             let comments = users[i]['comments']
             let user = users[i]['id']
-            // console.log(comments)
             for (let i = 0; i < comments.length; i++) {
               if (String(comments[i]['dog_name']) == String(dog['dog_name'])) {
                 comments_list.push({'id': user, 'comment': comments[i]['comment']})
@@ -199,11 +195,10 @@
             }
           }
 
-          // console.log(comments_list)
           for (let i = 0; i < comments_list.length; i++) {
             let userid = comments_list[i]['id']
             let comment = comments_list[i]['comment']
-            // alert(userid)
+
             let temp_html = ``
             if (user_id == userid) {
               temp_html = `<li class="list-group-item d-flex justify-content-between align-items-start list">
@@ -215,7 +210,7 @@
 
                                   <div class="btns">
                                     <button type="button" onclick="update_post(\'${userid}\', \'${dog['dog_name']}\')" class="btn btn-outline-primary" id="update_btn">수정하기</button>
-                                    <button type="button" class="btn btn-outline-danger">삭제하기</button>
+                                    <button type="button" onclick="delete_post(\'${userid}\', \'${dog['dog_name']}\', \'${comment}\')" class="btn btn-outline-danger">삭제하기</button>
                                   </div>
 
                               </li>`
@@ -241,22 +236,18 @@
   </script>
 
   <body>
-    <header class="header">
-      <a href="http://localhost:5000/">
-        <h1>너강내강</h1>
-      </a>
-      <div class="menu_div">
-        <div>
-          <span
-            class="user_id"
-            id="user_id"
-          > {{user_id}}
-          </span>
-          님
-        </div>
-
+  <header class="header">
+    <a href="http://localhost:5000">
+      <h1>너강내강</h1>
+    </a>
+    <div class="menu_div">
+      <div>
+        <span class="user_id" id="user_id">
+              {{id}}
+            </span> 님
       </div>
-    </header>
+    </div>
+  </header>
     <main>
       <div class="modal">
         <div class="modal_content">
