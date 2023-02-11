@@ -24,10 +24,9 @@ def home():
     token_receive = request.cookies.get('mytoken')
     print(request.cookies.get('mytoken'))
     try:
-        print('232213')
+
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        print('1')
-        print(payload['id'])
+
         user_info = db.user.find_one({"id": payload['id']})
         print(user_info)
         return render_template('signin/signin.html', id=user_info["id"])
@@ -86,7 +85,7 @@ def api_valid():
 
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        print(payload)
+
 
         userinfo = db.user.find_one({'id': payload['id']}, {'_id': 0})
         return jsonify({'result': 'success', 'id': userinfo['id']})
