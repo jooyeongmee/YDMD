@@ -168,7 +168,7 @@
 
     function show_post(){
       window.sessionStorage.setItem('dog_name', '푸들');
-      let user_id = $.cookie('mytoken')['id']
+      let user_id = `{{user_id}}`
       let dog_name = sessionStorage.getItem('dog_name');
       $.ajax({
         type: "GET",
@@ -242,7 +242,7 @@
 
   <body>
     <header class="header">
-      <a href="http://localhost:5001/main">
+      <a href="http://localhost:5000/">
         <h1>너강내강</h1>
       </a>
       <div class="menu_div">
@@ -250,7 +250,7 @@
           <span
             class="user_id"
             id="user_id"
-          > `<script>$.cookie('mytoken')['id']</script>`
+          > {{user_id}}
           </span>
           님
         </div>
