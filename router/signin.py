@@ -73,7 +73,7 @@ def api_signup():
     doc = {
         'id': id_receive,
         'pw': pw_hash,
-        'collections': []
+        'comments': []
     }
     db.user.insert_one(doc)
 
