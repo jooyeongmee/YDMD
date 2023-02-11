@@ -34,6 +34,10 @@
         margin-top: 50px;
       }
 
+      .list {
+        display: flex;
+        flex-direction: column;
+      }
       .post-list{
         display: flex;
         flex-direction: row;
@@ -50,13 +54,18 @@
         border-radius: 5px;
         box-shadow: 0px 0px 3px 0px gray;
 
+
+      }
+      .text-box {
+        width: 100%;
       }
       .content {
         margin-top: 10px;
+        text-align: left;
       }
       .btns {
         margin-top: 10px;
-
+        width:100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -90,28 +99,72 @@
       main {
         padding-top: 5%;
       }
+      .modal {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        top: 0;
+        left: 0;
+        display: none;
+      }
+      .modal_content {
+        width: 400px;
+        height: 200px;
+        background: #fff;
+        border-radius: 10px;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        margin-top: -100px;
+        margin-left: -200px;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 74px 0;
+        line-height: 23px;
+        cursor: pointer;
+      }
     </style>
   </head>
   <script>
     $(document).ready(function () {
-      login();
+      // login();
       show_post();
     });
 
-    function login() {
-      $.ajax({
-        type: "GET",
-        url: `/show/login`,
-        data: {},
-        success: function (response) {
-          // alert('안녕')
-          // alert(response["token"])
-          $.cookie('mytoken', response['token']);
+    // function login() {
+    //   $.ajax({
+    //     type: "GET",
+    //     url: `/show/login`,
+    //     data: {},
+    //     success: function (response) {
+    //       // alert('안녕')
+    //       // alert(response["token"])
+    //       $.cookie('mytoken', response['token']);
+    //
+    //     }
+    //   });
+    // }
+    function update_post(id, dog_name) {
+      alert(id)
+      alert(dog_name)
+      $('.modal').fadeIn();
+      $('.modal_complete_button').click(() => {
+        let new_comment = $('.modal_comment_input').val();
+        $.ajax({
+          type: "POST",
+          url: `/show/update`,
+          data: {id: id, dog_name: dog_name, comment: new_comment},
+          success: function (response) {
+            alert(response['msg'])
+            window.location.reload()
 
-        }
-      });
+          }
+        });
+        $('.modal').fadeOut();
+      })
+
     }
-
 
     function show_post(){
       window.sessionStorage.setItem('dog_name', '푸들');
@@ -123,7 +176,6 @@
         data: {},
         success: function (response) {
           let dog = response['dog']
-          let comments = response['comments']
           let users = response['users']
 
           let image_html = `<img src=${dog['dog_image']} class="img-fluid rounded-start" alt="...">`
@@ -134,34 +186,63 @@
           $('#dog_name').append(name_html)
           $('#dog_intro').append(intro_html)
 
+          let comments_list = []
+
           for (let i = 0; i < users.length; i++) {
+            let comments = users[i]['comments']
+            let user = users[i]['id']
+            // console.log(comments)
+            for (let i = 0; i < comments.length; i++) {
+              if (String(comments[i]['dog_name']) == String(dog['dog_name'])) {
+                comments_list.push({'id': user, 'comment': comments[i]['comment']})
+              }
+            }
+          }
 
-            let comment = comments[i]['comment']
+          // console.log(comments_list)
+          for (let i = 0; i < comments_list.length; i++) {
+            let userid = comments_list[i]['id']
+            let comment = comments_list[i]['comment']
+            // alert(userid)
+            let temp_html = ``
+            if (user_id == userid) {
+              temp_html = `<li class="list-group-item d-flex justify-content-between align-items-start list">
 
-            let temp_html = `<li class="list-group-item d-flex justify-content-between align-items-start">
-                                <div>
-                                  <div class="ms-2 me-auto">
-                                    <div class="fw-bold">${user_id}</div>
+                                  <div class="ms-2 me-auto text-box" >
+                                    <div class="fw-bold">${userid}</div>
                                     <div class="content">${comment}</div>
                                   </div>
 
                                   <div class="btns">
-                                    <button type="button" onclick="" class="btn btn-outline-primary">수정하기</button>
+                                    <button type="button" onclick="update_post(\'${userid}\', \'${dog['dog_name']}\')" class="btn btn-outline-primary" id="update_btn">수정하기</button>
                                     <button type="button" class="btn btn-outline-danger">삭제하기</button>
                                   </div>
-                                </div>
+
                               </li>`
+            } else {
+              temp_html = `<li class="list-group-item d-flex justify-content-between align-items-start list">
+
+                                  <div class="ms-2 me-auto text-box" >
+                                    <div class="fw-bold">${userid}</div>
+                                    <div class="content">${comment}</div>
+                                  </div>
+
+                              </li>`
+            }
 
             $('#post-list').append(temp_html)
           }
         }
       });
+
+
+
     }
   </script>
 
   <body>
     <header class="header">
-      <a href="http://localhost:5001/">
+      <a href="http://localhost:5001/main">
         <h1>너강내강</h1>
       </a>
       <div class="menu_div">
@@ -177,6 +258,16 @@
       </div>
     </header>
     <main>
+      <div class="modal">
+        <div class="modal_content">
+          <h3>코멘트를 수정해주세요.</h3>
+          <input
+            type="text"
+            class="modal_comment_input"
+          />
+          <button class="modal_complete_button">완료</button>
+        </div>
+      </div>
       <div class="title">
       <div class="card mb-3" style="max-width: 540px;">
         <div class="row g-0">
