@@ -37,15 +37,15 @@ def home():
 def comment_post():
     comment_receive = request.form['comment_give']
     dog_name_receive = request.form['dog_name_give']
-    id = 'test1'
-
+    user_name_receive = request.form['user_name_give']
+    print(user_name_receive)
     doc = {
         'dog_name': dog_name_receive,
         'comment': comment_receive
     }
-    users = db.user.find_one({'id': id}, {'_id': False})["comments"]
-    users.append(doc)
-    db.user.update_one({'id': id}, {'$set': {'comments': users}})
+    user_comments = db.user.find_one({'id': user_name_receive}, {'_id': False})["comments"]
+    user_comments.append(doc)
+    db.user.update_one({'id': user_name_receive}, {'$set': {'comments': user_comments}})
 
     return jsonify({'msg': '작성완료'})
 
