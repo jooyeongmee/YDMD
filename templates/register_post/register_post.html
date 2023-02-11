@@ -17,6 +17,17 @@
     <title>너강내강</title>
 
     <style>
+        header {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 30px;
+        }
+
         .row {
             margin-top: 100px
         }
@@ -57,6 +68,7 @@
                     alert(response["msg"])
                 }
             });
+            location.href='http://localhost:5000/show/'
         }
 
         function dog_explain() {
@@ -64,32 +76,66 @@
             // let dog_info = req_dog_info(dog_name)
             $.ajax({
                 type: 'POST',
-                url: `api/register_post/dog_info`,
-                data: {dog_name_give:dog_name},
+                url: `/register/api/register_post/dog_info`,
+                data: {dog_name_give: dog_name},
                 success: function (response) {
+                    let dog_image = response['dog']['dog_image']
+                    let dog_intro = response['dog']['dog_intro']
+                    let html = `<img src=${dog_image} class="img-fluid rounded-start" alt="...">
+                                <p>
+                                    ${dog_intro}
+                                </p>`
 
+                    $('.dog_info_wrapper').append(html)
                 }
             })
         }
     </script>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8 card" id="write_box">
-            <input id="write_box_inner" class="form-control updateBucket" type="text" placeholder="작성하기!">
-            <button onclick="location.href='http://localhost:5000/show/'" type="button" id="clear_btn" class="btn btn-outline-primary">완료</button>
+<header>
+    <a href="http://localhost:5000">
+        <h1>너강내강</h1>
+    </a>
+    <div class="menu_div">
+        <div>
+            {% if result == "login" %}
+            <span>
+              {{id}}
+            </span> 님
+            <button type="button" class="btn btn-secondary" onclick="logout()">로그아웃</button>
+            {% else %}
+            <button type="button" class="btn btn-link" onclick="location.href='/signin'">로그인</button>
+            <button type="button" class="btn btn-secondary" onclick="location.href='/signin'">회원가입</button>
+            {% endif %}
         </div>
-        <div class="col-2">
+    </div>
+</header>
+<main>
+    <div class="container">
+        <div class="dog_info_wrapper">
 
         </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8 card" id="write_box">
+                <input id="write_box_inner" class="form-control updateBucket" type="text" placeholder="작성하기!">
+                <button onclick="save_comment()" type="button" id="clear_btn"
+                        class="btn btn-outline-primary">완료
+                </button>
+            </div>
+            <div class="col-2">
 
-    </div>
+            </div>
+        </div>
 
-    <div class="user_name_wrapper">
-        <span id="user_id">{{id}}</span>님
+        <div class="user_name_wrapper">
+            <span id="user_id">{{id}}</span>님
+        </div>
     </div>
-</div>
+</main>
+<footer>
+
+</footer>
 </body>
 </html>

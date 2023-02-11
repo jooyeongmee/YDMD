@@ -47,13 +47,13 @@ def comment_post():
     users.append(doc)
     db.user.update_one({'id': id}, {'$set': {'comments': users}})
 
-    print(users)
     return jsonify({'msg': '작성완료'})
 
 
-@register_post.route('api/register_post/dog_info', methods=["GET"])
+# 글 등록 화면에서 강아지 db 정보 주는 함수
+# 클라이언트의 sessionstorage에 저장된 dog_name을 받음
+@register_post.route('/api/register_post/dog_info', methods=["POST"])
 def dog_info():
-    dog_name_receive = request.form['dog_give']
-    print("dog_name_receive : "+dog_name_receive)
-    dog = db.dogs.find({'dog_name': dog_name_receive}, {'_id': False})
+    dog_name_receive = request.form['dog_name_give']
+    dog = db.dogs.find_one({'dog_name': dog_name_receive}, {'_id': False})
     return jsonify({'dog': dog})
