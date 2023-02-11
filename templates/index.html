@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
@@ -10,43 +11,132 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
+
     <title>Title</title>
+    <style>
+        header {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 30px;
+        }
+
+        main {
+            padding-top: 5%;
+        }
+
+        .card-wrap {
+            width: 95%;
+            margin: 20px auto 0px auto;
+        }
+
+        #card-element {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #card-element > button {
+            border: 1px solid white;
+            background-color: white;
+        }
+
+        button.dog-wrapper{
+            width: 90%;
+            height: 323px;
+            overflow: hidden;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             listing();
         });
+
         function listing() {
-            $.ajax({
-                type:'GET',
-                url:'api/dog-list',
-                data:{},
-                success: function(response){
-                    let rows = response['dog_list']
-                    for(let i=0; i<rows.length; i++){
+                        $.ajax({
+                type: 'GET',
+                url: '/api/dog-list',
+                data: {},
+                success: function (response) {
+                    let rows = response['dogs']
+                    for (let i = 0; i < rows.length; i++) {
                         let name = rows[i]['dog_name']
                         let image = rows[i]['dog_image']
-                        let intro = rows[i]['dog_intro']
-                        let html =`<div class="col">
-                                            <div class="card h-100">
-                                                <img src=${image} class="card-img-top">
+                        // <a href="https://localhost:5000/register"></a> 로 img 태그 감쌀 것
+                        let html = `<div class="col">
+                                            <div class="card h-70" id="card-element">
+                                                <button onclick="board(\'${name}\')"
+                                                class="dog-wrapper">
+                                                    <img src=${image} class="card-img-top">
+                                                    <rect width="100%" height="80%">
+                                                </button>
                                                 <div class="card-body">
                                                     <h5 class="card-title">${name}</h5>
-                                                    <p class="card-text">${intro}</p>
                                                 </div>
                                             </div>
-                                        </div>`
+                                    </div>`
 
                         $('#cards-box').append(html)
                     }
                 }
             })
         }
+
+        function board(species) {
+            let token = $.cookie('mytoken')
+            if (token != null) {
+                alert(species + " 리뷰 페이지로 이동합니다")
+                window.sessionStorage.setItem('dog_name', species)
+                location.href='/register'
+            } else {
+                alert("리뷰를 보려면 로그인을 해야 합니다")
+            }
+        }
+
+        function logout() {
+            $.removeCookie('mytoken', {path: '/'})
+            alert('로그아웃 되었습니다!')
+            window.location.href = "/"
+        }
     </script>
 </head>
 <body>
-<div class="cards_wrap">
-    <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+<header class="header">
+    <a href="http://localhost:5000">
+        <h1>너강내강</h1>
+    </a>
+    <div class="menu_div">
+        <div>
+            {% if result == "login" %}
+            <span>
+              {{id}}
+            </span> 님
+            <button type="button" class="btn btn-secondary" onclick="logout()">로그아웃</button>
+            {% else %}
+            <button type="button" class="btn btn-link" onclick="location.href='/signin'">로그인</button>
+            <button type="button" class="btn btn-secondary" onclick="location.href='/signin'">회원가입</button>
+            {% endif %}
+        </div>
     </div>
-</div>
+</header>
+<main>
+    <div class="card-wrap">
+        <div class="row row-cols-3 row-cols-md-4 g-4" id="cards-box">
+        </div>
+    </div>
+</main>
+<footer>
+
+</footer>
 </body>
 </html>

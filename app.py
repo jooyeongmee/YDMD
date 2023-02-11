@@ -13,9 +13,9 @@ app.register_blueprint(signin.sign_in)
 
 
 # GET: 홈페이지
-@app.route('/', methods=['GET'])
-def home():
-    return render_template('signin/signin.html')
+# @app.route('/', methods=['GET'])
+# def home():
+#     return render_template('index.html')
 
 
 if __name__ == '__main__':
