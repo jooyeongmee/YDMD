@@ -17,40 +17,59 @@
     <title>너강내강</title>
 
     <style>
-        .row{margin-top: 100px}
-        #write_box{
+        .row {
+            margin-top: 100px
+        }
+
+        #write_box {
             display: flex;
             flex-direction: row;
             padding: 10px;
         }
+
         #write_box {
 
         }
-        #write_box > #write_box_inner{
+
+        #write_box > #write_box_inner {
             width: 80%;
             margin-right: 10px;
         }
-        #write_box > #clear_btn{
+
+        #write_box > #clear_btn {
             margin-right: 10px;
         }
     </style>
     <script>
-        // $(document).ready(function () {
-        //     save_comment();
-        // });
-        function save_comment(){
-            window.sessionStorage.setItem('dog_name', '푸들');
+        $(document).ready(function () {
+            dog_explain();
+        });
+
+
+        function save_comment() {
             let dog_name = sessionStorage.getItem('dog_name');
-            let comment_list =$('#write_box_inner').val()
+            let comment_list = $('#write_box_inner').val()
             $.ajax({
                 type: "POST",
                 url: "/register/register_post",
-                data: {comment_give:comment_list, dog_name_give:dog_name},
+                data: {comment_give: comment_list, dog_name_give: dog_name},
                 success: function (response) {
                     alert(response["msg"])
-
                 }
             });
+        }
+
+        function dog_explain() {
+            let dog_name = window.sessionStorage.getItem('dog_name')
+            // let dog_info = req_dog_info(dog_name)
+            $.ajax({
+                type: 'POST',
+                url: `api/register_post/dog_info`,
+                data: {dog_name_give:dog_name},
+                success: function (response) {
+
+                }
+            })
         }
     </script>
 </head>
@@ -58,14 +77,19 @@
 <div class="container">
     <div class="row">
         <div class="col-2"></div>
-        <div class="col-8 card"  id="write_box">
-            <input id="write_box_inner"  class="form-control updateBucket" type="text" placeholder="작성하기!">
-            <button onclick="save_comment()"  type="button" id="clear_btn" class="btn btn-outline-primary">완료</button>
-
+        <div class="col-8 card" id="write_box">
+            <input id="write_box_inner" class="form-control updateBucket" type="text" placeholder="작성하기!">
+            <button onclick="location.href='http://localhost:5000/show/'" type="button" id="clear_btn" class="btn btn-outline-primary">완료</button>
+        </div>
+        <div class="col-2">
 
         </div>
-        <div class="col-2"></div>
 
     </div>
+
+    <div class="user_name_wrapper">
+        <span id="user_id">{{id}}</span>님
+    </div>
+</div>
 </body>
 </html>
