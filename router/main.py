@@ -2,7 +2,10 @@ from flask import Blueprint, request, render_template, jsonify, redirect, url_fo
 
 from pymongo import MongoClient
 
-client = MongoClient('mongodb+srv://project:ydmd5@cluster0.n7giicj.mongodb.net/?retryWrites=true&w=majority')
+import certifi
+ca = certifi.where()
+client = MongoClient('mongodb+srv://project:ydmd5@cluster0.n7giicj.mongodb.net/?retryWrites=true&w=majority', tlsCAFile=ca)
+
 dog_db = client.YDMD.dogs
 url_db = client.YDMD.english_url
 user_db = client.YDMD.user

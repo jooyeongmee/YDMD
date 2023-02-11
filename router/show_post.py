@@ -17,16 +17,18 @@ SECRET_KEY = 'YDMD'
 
 @show_post.route('/')
 def home():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.user.find_one({"id": payload['id']})
-        print(user_info['id'])
-        return render_template('show_post/index.html', user_id=user_info["id"])
-    except jwt.ExpiredSignatureError:
-        return render_template('index.html')
-    except jwt.exceptions.DecodeError:
-        return render_template('index.html')
+
+    return render_template('show_post/index.html')
+    # token_receive = request.cookies.get('mytoken')
+    # try:
+    #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    #     user_info = db.user.find_one({"id": payload['id']})
+    #     print(user_info['id'])
+    #     return render_template('show_post/index.html', user_id=user_info["id"])
+    # except jwt.ExpiredSignatureError:
+    #     return render_template('index.html')
+    # except jwt.exceptions.DecodeError:
+    #     return render_template('index.html')
 
 
 # @show_post.route('/login', methods=['GET'])
