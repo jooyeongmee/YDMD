@@ -26,7 +26,7 @@
                         $.cookie('mytoken', response['token'], {path:'/'});
 
                         alert('로그인 완료!')
-                        window.location.href = 'http://localhost:5000/main/'
+                        window.location.href = 'http://localhost:5000/'
                     } else {
 
                         alert(response['msg'])
@@ -48,7 +48,7 @@
                     if (response['result'] == 'success') {
 
                         alert('회원가입이 완료되었습니다.')
-                        window.location.href = '/signin'
+                        window.location.href = 'http://localhost:5000/'
                     } else {
 
                         alert(response['msg'])
