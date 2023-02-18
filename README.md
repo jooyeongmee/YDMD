@@ -5,7 +5,7 @@
 <h3> 소개글: </h3>
 너강내강은 너의 강아지도 보여주고 내 강아지도 보여줄게 라는 애완견을 키우는 사람들이 그 품종에 관한 리뷰를 서로 주고 받을 수 있도록 도와주는 서비스이다.
 
-<img src="https://user-images.githubusercontent.com/89931104/219872874-16d5ab68-fb2d-4d77-b14b-cf795c73cf55.gif">
+![](https://user-images.githubusercontent.com/89931104/219872874-16d5ab68-fb2d-4d77-b14b-cf795c73cf55.gif)
 
 
 <h3>기능: </h3>
